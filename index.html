@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Lock and unlock</title>
+    <meta name="title" content="Forty Two (typed)">
+    <meta name="description"
+        content="This contract will lock up some tokens that can only be unlocked providing 42 as typed redeemer and datum.. A GameChanger Wallet Dapp Demo. https://gamechanger.finance/">
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#6d41a1" />
+    <script src="https://cdn.jsdelivr.net/npm/@gamechanger-finance/gc/dist/browser.min.js"></script>
+    <script src="connect_script.js"></script>
+    <script src="magicNumberSC.js"></script>
+    <script src="lock_script.js"></script>
+    <script src="unlock_script.js"></script>
+    <script src="index.js" defer></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <button class="button connect" id="connectButton"
+        onclick="location.href='https://beta-preprod-wallet.gamechanger.finance'">Loading...</button>
+
+    <div class="contractBox">
+        <h5>Contract</h5>
+        <textarea type="text" id="heliosInput" rows="50" placeholder="Helios script" onchange="store()">
+spending MagicNumber
+
+struct Datum {
+    magicNumber: Int
+}
+
+struct Redeemer {
+    magicNumber: Int 
+}
+
+func main(datum: Datum, redeemer: Redeemer, _) -> Bool {   
+    redeemer.magicNumber==datum.magicNumber
+}</textarea>
+    </div>
+
+    <div class="datumBox">
+        <h5>Datum</h5>
+            <textarea type="text" id="lockInput" rows="25" class="amountInput" placeholder="Datum" onchange="store()">
+            </textarea>
+
+
+        <h5>Redeemer</h5>
+        <div id="dappConnectorBox">
+            <!-- <input type="text" id="contractAddressInput" class="unlockInput" placeholder="Contract address"
+                onchange="store()"> -->
+            <!-- <input type="text" id="txHashInput" class="amountInput" placeholder="txHash to unlock" onchange="store()">
+            <input type="text" id="txHashIndexInput" class="amountInput" placeholder="txHash index" onchange="store()"> -->
+            <textarea type="text" id="unlockInput" rows="25" class="amountInput" placeholder="Redeemer" onchange="store()"></textarea>
+        </div>
+
+
+    </div>
+
+    <div class="gcScriptBox">
+        <h5>GameChanger script</h5>
+        <textarea type="text" id="heliosInput" rows="50" placeholder="Helios script" onchange="store()">
+            {
+                "type": "script",
+                "title": "Simple transaction",
+                "description": "A simple transaction with GameChanger",
+                "exportAs": "CoinSendingDemo",
+                "return": {
+                    "mode": "last"
+                },
+                "run": {
+                    "stage1_build_transaction": {
+                        "type": "buildTx",
+                        "title": "1 tADA",
+                        "description": "This is a payment request. https://gamechanger.finance/",
+                        "name": "Unsigned Demo Transaction",
+                        "tx": {
+                            "outputs": [
+                                {
+                                    "address": "addr_test1qrl07u9ssdtdwtzhrt0zrrr79yejxhfvmsmjt9jxqyaz0ktp6ydulqht6r9z4ld0jms3a3c7gw45u32vhc2ftdp2f6rqvz02jw",
+                                    "assets": [
+                                        {
+                                            "policyId": "ada",
+                                            "assetName": "ada",
+                                            "quantity": "1000000"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "stage2_sign_transaction": {
+                        "type": "signTxs",
+                        "namePattern": "Signed Demo Transaction",
+                        "detailedPermissions": false,
+                        "txs": [
+                            "{get('cache.stage1_build_transaction.txHex')}"
+                        ]
+                    },
+                    "stage3_submit_transaction": {
+                        "type": "submitTxs",
+                        "namePattern": "Submitted Demo Transaction",
+                        "txs": "{get('cache.stage2_sign_transaction')}"
+                    },
+                    "stage4_export_results": {
+                        "type": "macro",
+                        "run": "{get('cache.stage1_build_transaction.txHash')}"
+                    }
+                }
+            }</textarea>
+            <button class="button" id="lockBtn"
+            onclick="location.href='https://beta-preprod-wallet.gamechanger.finance'">Loading...</button>
+            <pre id="errorBox" class="errors"></pre>
+            <pre id="resultBox" class="console">Results will appear here after you connect with the wallet</pre>
+    </div>
+
+</body>
+
+</html>
